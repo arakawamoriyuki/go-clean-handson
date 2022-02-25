@@ -5,7 +5,7 @@
 - [はじめての Go](http://gihyo.jp/dev/feature/01/go_4beginners)
 - [Go Web プログラミング](https://astaxie.gitbooks.io/build-web-application-with-golang/content/ja/01.0.html)
 
-```
+```sh
 $ go version
 go version go1.17.7 darwin/amd64
 ```
@@ -89,7 +89,9 @@ https://golang.org/doc/cmd
 
 ### Hello world
 
-```main.go
+`main.go`
+
+```go
 package main
 
 import "fmt"
@@ -99,14 +101,14 @@ func main(){
 }
 ```
 
-```
+```sh
 $ go run main.go
 hello world
 ```
 
 ### ビルドしてバイナリを実行してみる
 
-```
+```sh
 $ go build main.go
 $ ls
 main main.go
@@ -122,15 +124,17 @@ hello world
 
 標準のコーディング規約とフォーマッターが付属されていて、以下コマンドでフォーマットすることができます。
 
-```
+```sh
 $ go fmt main.go
 ```
 
 vscode では以下設定で保存時に自動フォーマットできます。
 
-```
-"[go]": {
-    "editor.formatOnSave": true,
+```json
+{
+  "[go]": {
+    "editor.formatOnSave": true
+  }
 }
 ```
 
@@ -180,19 +184,25 @@ $ tree
     └── subpkg.go
 ```
 
-```subpkg/subpkg.go
+`subpkg/subpkg.go`
+
+```go
 package subpkg
 
 var Message string = "subpkg/subpkg.go message"
 ```
 
-```subpkg/other.go
+`subpkg/other.go`
+
+```go
 package subpkg
 
 var OtherMessage string = "subpkg/other.go message"
 ```
 
-```main.go
+`main.go`
+
+```go
 package main
 
 import (
@@ -224,7 +234,7 @@ $ go run main.go
 
 また、以下でビルドすることができ、そのディレクトリに実行ファイルを作成できます。
 
-```
+```sh
 $ go build
 $ ./main
 ```
@@ -253,7 +263,7 @@ $ ./main
 
 ### パッケージ宣言
 
-```sample.go
+```go
 package main
 ```
 
@@ -267,7 +277,7 @@ package main
 
 区切りにカンマは必要ありません。
 
-```sample.go
+```go
 import (
     # 組み込み関数
     "fmt"
@@ -290,7 +300,7 @@ import (
 - `.` は中の関数が展開される ( `strings.ToUpper()` が `ToUpper()` )
 - `_` は使用していないパッケージだと明示する (使用してなくてもコンパイルエラーにならない)
 
-```sample.go
+```go
 import (
     "fmt"
     f "fmt"
@@ -324,13 +334,13 @@ import (
 
 文字列はダブルクォートで書くことができます。
 
-```sample.go
+```go
 var Message string = "hello world"
 ```
 
 ヒアドキュメントはバッククォートで書くことができます。
 
-```sample.go
+```go
 var Message string = `first line
 second line
 third line`
@@ -338,7 +348,7 @@ third line`
 
 また、コンパイラが明らかにわかる型を推論して型宣言を省略することもできます。
 
-```sample.go
+```go
 message := "hello world"
 ```
 
@@ -348,7 +358,7 @@ message := "hello world"
 
 また、複数定義することもでき、同じ型なら省略可能です。
 
-```sample.go
+```go
 var message string = "hello world"
 
 var foo, bar, buz string = "foo", "bar", "buz"
@@ -365,7 +375,7 @@ var (
 
 定数は const で定義でき、再代入不可になります。
 
-```sample.go
+```go
 const Hello string = "hello"
 Hello = "bye" // cannot assign to Hello
 ```
@@ -374,7 +384,7 @@ Hello = "bye" // cannot assign to Hello
 
 代入しない場合、変数はゼロ値で初期化されます。
 
-```sample.go
+```go
 var i int // 整数型のゼロ値 0 になる
 ```
 
@@ -392,7 +402,7 @@ var i int // 整数型のゼロ値 0 になる
 
 条件に丸括弧は必要ありません。また、三項演算子はありません。
 
-```sample.go
+```go
 a, b := 10, 100
 if a > b {
     fmt.Println("a is larger than b")
@@ -407,7 +417,7 @@ if a > b {
 
 for を利用してループを回すことができます。
 
-```sample.go
+```go
 for i := 0; i < 10; i++ {
     fmt.Println(i)
 }
@@ -415,7 +425,7 @@ for i := 0; i < 10; i++ {
 
 while のような書き方も可能です。
 
-```sample.go
+```go
 n := 0
 for n < 10 {
     fmt.Printf("n = %d\n", n)
@@ -425,7 +435,7 @@ for n < 10 {
 
 また、以下のように無限ループを作ることもできます。
 
-```sample.go
+```go
 for {
     doSomething()
 }
@@ -435,7 +445,7 @@ for {
 
 配列は range を使ってループすることができます。
 
-```sample.go
+```go
 for i, v := range []string{"a", "b", "c"} {
     fmt.Println(i, v)
 }
@@ -447,7 +457,7 @@ for i, v := range []string{"a", "b", "c"} {
 
 条件に一致した処理を走らせることができます。
 
-```sample.go
+```go
 n := 10
 switch n {
 case 15:
@@ -467,7 +477,7 @@ golang では 1 つの case 実行されると次の case に移ることはあ�
 
 `fallthrough` キーワードで次にうつる事もできます。
 
-```sample.go
+```go
 n := 3
 switch n {
 case 3:
@@ -486,7 +496,7 @@ case 1:
 
 関数は `func` で作ります。引数には型を指定、複数同じ型なら一つにまとめることもできます。
 
-```sample.go
+```go
 func sum(i, j int) {
     fmt.Println(i + j)
 }
@@ -494,7 +504,7 @@ func sum(i, j int) {
 
 また、戻り値は関数定義のあとに型を指定します。
 
-```sample.go
+```go
 func sum(i, j int) int {
     return i + j
 }
@@ -502,7 +512,7 @@ func sum(i, j int) int {
 
 複数値を返す場合、複数の型を指定します。
 
-```sample.go
+```go
 func swap(i, j int) (int, int) {
     return j, i
 }
@@ -510,7 +520,7 @@ func swap(i, j int) (int, int) {
 
 名前付き戻り値で `return` の後の値を省略することもできます。(代入された値を返す。代入されていなければ結果的にゼロ値を返す)
 
-```sample.go
+```go
 func div(i, j int) (result int, err error) {
     if j == 0 {
         err = errors.New("divied by zero")
@@ -523,7 +533,7 @@ func div(i, j int) (result int, err error) {
 
 以下のように無名関数を作ることもできます。
 
-```sample.go
+```go
 func(i, j int) {
     fmt.Println(i + j)
 }(2, 4)
@@ -531,7 +541,7 @@ func(i, j int) {
 
 関数を変数に代入できます。
 
-```sample.go
+```go
 var sum func(i, j int) = func(i, j int) {
     fmt.Println(i + j)
 }
@@ -539,7 +549,7 @@ var sum func(i, j int) = func(i, j int) {
 
 可変長引数も利用できます。
 
-```sample.go
+```go
 func sum(nums ...int) (result int) {
     // numsは[]int型
     for _, n := range nums {
@@ -563,7 +573,7 @@ go は `try/catch` や `throw` がありません。
 
 また、エラーの作成は errors パッケージを使います。
 
-```sample.go
+```go
 package main
 
 import (
@@ -596,19 +606,19 @@ func main() {
 
 配列は固定長で長さを指定します。
 
-```sample.go
+```go
 var arr1 [4]string
 ```
 
 `[...]` で暗黙的に長さの指定ができます。
 
-```sample.go
+```go
 arr := [...]string{"a", "b", "c", "d"}
 ```
 
 引数で受け取る場合にも型と長さの指定をする必要があります。
 
-```sample.go
+```go
 func fn(arr [4]string) {
     fmt.Println(arr)
 }
@@ -624,14 +634,14 @@ func main() {
 
 スライスという可変長配列も定義できます。
 
-```sample.go
+```go
 var s []string
 s := []string{"a", "b", "c", "d"}
 ```
 
 値を部分的に切り出す事ができます。
 
-```sample.go
+```go
 s := []int{0, 1, 2, 3, 4, 5}
 fmt.Println(s[2:4])      // [2 3]
 fmt.Println(s[0:len(s)]) // [0 1 2 3 4 5]
@@ -644,7 +654,7 @@ fmt.Println(s[:])        // [0 1 2 3 4 5]
 
 `append` はスライスの末尾に値を追加し、その結果を返す組込み関数です。
 
-```sample.go
+```go
 s1 := []string{"a", "b"}
 s1 = append(s1, "c") // s1にs2を追加
 fmt.Println(s1)      // [a b c]
@@ -652,7 +662,7 @@ fmt.Println(s1)      // [a b c]
 
 また、可変長の値を受け取ることもできます。
 
-```sample.go
+```go
 s1 := []string{"a", "b"}
 s2 := []string{"c", "d"}
 s1 = append(s1, s2...) // s1にs2を追加
@@ -663,7 +673,7 @@ fmt.Println(s1)        // [a b c d]
 
 添字によるアクセスの代わりに `range` を使用できます。
 
-```sample.go
+```go
 s1 := []string{"a", "b", "c", "d"}
 
 for index, value := range s1 {
@@ -678,7 +688,7 @@ for index, value := range s1 {
 
 また、map 型もループで回せます。
 
-```sample.go
+```go
 months := map[string]int{
     "January": 1,
     "February": 2,
@@ -695,7 +705,7 @@ for key, value := range months {
 
 `string` のキーに `int` の値を格納するマップ
 
-```sample.go
+```go
 months := map[string]int{
     "January": 1,
     "February": 2,
@@ -704,7 +714,7 @@ months := map[string]int{
 
 キーの存在確認は以下のように判定できます。
 
-```sample.go
+```go
 _, ok := months["January"]
 if ok {
     // データがあった場合
@@ -713,7 +723,7 @@ if ok {
 
 マップからデータを消す場合は delete を使います。
 
-```sample.go
+```go
 delete(months, "January")
 ```
 
@@ -727,7 +737,7 @@ Go はポインタを扱うことができます。
 
 int などでも参照渡しできるし配列を値渡しもできます。
 
-```sample.go
+```go
 func callByValue(i int) {
     i = 20 // 代入しても呼び出し側へ影響しない
 }
@@ -753,7 +763,7 @@ func main() {
 
 `defer` は延期という意味。他の言語でいう `finaly` のような使い方をします。
 
-```sample.go
+```go
 func main() {
     file, err := os.Open("./error.go")
     if err != nil {
@@ -775,7 +785,7 @@ func main() {
 
 パニックで発生したエラーは `recover` で拾えるので、defer で処理する事でエラー処理ができます。
 
-```sample.go
+```go
 func main() {
     defer func() {
         err := recover()
@@ -792,7 +802,7 @@ func main() {
 
 パニックは自分で起こす事もできます。
 
-```sample.go
+```go
 a := []int{1, 2, 3}
 for i := 0; i < 10; i++ {
     if i >= len(a) {
@@ -812,7 +822,7 @@ for i := 0; i < 10; i++ {
 
 以下の関数は int 型の `id` と `priority` を受け取ります。
 
-```sample.go
+```go
 func ProcessTask(id, priority int) {
 }
 ```
@@ -821,7 +831,7 @@ func ProcessTask(id, priority int) {
 
 引数の順番間違えてもコンパイルが通り、間違えやすいインターフェースになっています。
 
-```sample.go
+```go
 var id int = 3
 var priority int = 5
 ProcessTask(id, priority)
@@ -830,7 +840,7 @@ ProcessTask(priority, id) // 順番間違えてもコンパイル通る
 
 場合に応じて独自の型を定義すると間違いが減り、安全になります。
 
-```sample.go
+```go
 type ID int
 type Priority int
 
@@ -848,7 +858,7 @@ ProcessTask(priority, id) // コンパイルエラー
 
 また、構造体のプロパティはドットでアクセス可能です。
 
-```sample.go
+```go
 type Task struct {
     ID int
     Detail string
@@ -867,14 +877,14 @@ fmt.Println(task.Done) // true
 
 ## ポインタ型
 
-```sample.go
+```go
 var task Task = Task{} // Task型
 var task *Task = &Task{} // Taskのポインタ型
 ```
 
 ポインタ型ではない型は値渡しされます。
 
-```sample.go
+```go
 type Task struct {
     ID int
     Detail string
@@ -894,7 +904,7 @@ func main() {
 
 ポインタ型は参照渡しされます。
 
-```sample.go
+```go
 func Finish(task *Task) {
     task.Done = true
 }
@@ -910,7 +920,7 @@ func main() {
 
 構造体は組み込み関数 `new` を使い、ゼロ値で初期化できます。
 
-```sample.go
+```go
 type Task struct {
     ID int
     Detail string
@@ -929,7 +939,7 @@ Go にはコンストラクタにあたる構文がありません。
 
 代わりに New で始まる関数を定義し、その内部で構造体を生成するのが通例です。
 
-```sample.go
+```go
 func NewTask(id int, detail string) *Task {
     task := &Task{
         ID: id,
@@ -950,12 +960,12 @@ func main() {
 
 メソッドはメソッド名の前に定義したい型を指定します。
 
-```sample.go
+```go
 func (変数名 メソッドを定義したい型) メソッド名() 戻り値の型 {
 }
 ```
 
-```sample.go
+```go
 package main
 
 import (
@@ -1000,7 +1010,7 @@ func main() {
 
 `type インターフェース名 interface {}` でメソッドが定義されている事を強制する用途に利用します。
 
-```sample.go
+```go
 package main
 
 import (
@@ -1064,7 +1074,7 @@ func main() {
 
 すべての引数を受け付ける Any 型が作れる
 
-```sample.go
+```go
 type Any interface {
 }
 
@@ -1075,7 +1085,7 @@ func Do(any Any) {
 
 書き方自体以下と同じです。
 
-```sample.go
+```go
 func Do(any interface{}) {
   // do something
 }
@@ -1091,7 +1101,7 @@ Go では，継承はサポートされていません。
 
 以下は Task に Reminder を埋め込むを埋め込み、Task が Reminder のプロパティやメソッドが利用可能になる例です。
 
-```sample.go
+```go
 package main
 
 import (
@@ -1144,7 +1154,7 @@ func main() {
 
 構造体( `struct` )だけではなくインターフェース( `interface` )も「埋め込む」(Embed) 事ができます
 
-```sample.go
+```go
 // 読み込みメソッドがある事をインターフェースで宣言
 type Reader interface {
     Read(p []byte) (n int, err error)
@@ -1166,7 +1176,7 @@ type ReadWriter interface {
 
 明示的に型変換(キャスト)ができます。
 
-```sample.go
+```go
 var s string = "abc"
 var b []byte = []byte(s) // string -> []byte
 fmt.Println(b)           // [97 98 99]
@@ -1174,7 +1184,7 @@ fmt.Println(b)           // [97 98 99]
 
 キャストに失敗した場合はパニックが発生します。
 
-```sample.go
+```go
 // cannot convert "a" (type string) to type int
 a := int("a")
 ```
@@ -1185,7 +1195,7 @@ Type Assertion で型を調べる事ができます。
 
 第一戻り値が元の値、第二戻り値が調べた結果です。
 
-```sample.go
+```go
 s, ok := value.(string) // Type Assertion
 if ok {
     fmt.Printf("value is string: %s\n", s)
@@ -1196,7 +1206,7 @@ if ok {
 
 Type Switch で型で分岐処理ができます。
 
-```sample.go
+```go
 switch v := value.(type) {
 case string:
     fmt.Printf("value is string: %s\n", v)
@@ -1217,7 +1227,7 @@ case Stringer:
 
 同期処理の場合は、1 度目のリクエスト完了後に 2 度目,3 度目...と直列で続きます。
 
-```sample.go
+```go
 package main
 
 import (
@@ -1245,7 +1255,7 @@ func main() {
 
 `go` キーワードで非同期処理で実装した場合は、並行してリクエストを行うことができます。
 
-```sample.go
+```go
 package main
 
 import (
@@ -1288,7 +1298,7 @@ func main() {
 
 まずは組み込み関数 `make` を使い、以下のようにチャネルを作成、書き込み、読み込みができます。
 
-```sample.go
+```go
 // stringを扱うチャネルを生成
 ch := make(chan string)
 
@@ -1301,7 +1311,7 @@ message := <- ch
 
 チャネルを利用して並行して HTTP リクエストし、早く取得されたステータスから順に受け取って処理しておく事ができます。
 
-```sample.go
+```go
 package main
 
 import (
@@ -1341,7 +1351,7 @@ func main() {
 
 主な用途は for/select 文と break を用いて実装するタイムアウト処理などに利用されます。
 
-```sample.go
+```go
 ch1 := make(chan string)
 ch2 := make(chan string)
 for {
@@ -1366,14 +1376,14 @@ for {
 
 `httprouter` を使って簡単なサーバーを立ててみましょう。
 
-```
+```sh
 $ go mod init main
 $ go get github.com/julienschmidt/httprouter@latest
 ```
 
-`main.go` を作成します。
+`main.go`
 
-```main.go
+```go
 package main
 
 import (
@@ -1411,18 +1421,17 @@ func main() {
 		log.Fatal(err)
 	}
 }
-
 ```
 
 API サーバーを実行します。
 
-```
+```sh
 $ go run main.go
 ```
 
 コードを確認しながら試して見ましょう。
 
-```
+```sh
 $ curl http://localhost:8080/
 Hello golang
 ```
@@ -1432,7 +1441,7 @@ Hello golang
 - `strconv.Atoi` を使い、文字列を数値型にキャストできます。 https://xn--go-hh0g6u.com/pkg/strconv/
 - `fmt.Fprint` に `http.ResponseWriter` を渡すことで body に書き込みが行えます。 https://github.com/julienschmidt/httprouter
 
-```
+```sh
 $ curl http://localhost:8080/fizzbuzz/1
 1
 $ curl http://localhost:8080/fizzbuzz/2
