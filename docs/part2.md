@@ -734,7 +734,8 @@ CREATE TABLE IF NOT EXISTS `todos` (
     `done` BOOLEAN NOT NULL,
     `created_at` DATETIME NOT NULL,
     `updated_at` DATETIME NOT NULL,
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+    `deleted_at` DATETIME
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
 ```
 
 `migrations/000001_create_todos.down.sql`
