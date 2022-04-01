@@ -1156,21 +1156,21 @@ func setupRouter() *gin.Engine {
 	{
 		todosGroup := apiGroup.Group("todos")
 		{
-			todosGroup.GET("/", func(c *gin.Context) {
+			todosGroup.GET("", func(c *gin.Context) {
 				c.String(http.StatusOK, "GET /api/todos")
 			})
-			todosGroup.GET("/:id", func(c *gin.Context) {
+			todosGroup.GET(":id", func(c *gin.Context) {
 				id := c.Params.ByName("id")
 				c.String(http.StatusOK, fmt.Sprintf("GET /api/todos/%s", id))
 			})
-			todosGroup.POST("/", func(c *gin.Context) {
+			todosGroup.POST("", func(c *gin.Context) {
 				c.String(http.StatusCreated, "POST /api/todos")
 			})
-			todosGroup.PATCH("/:id", func(c *gin.Context) {
+			todosGroup.PATCH(":id", func(c *gin.Context) {
 				id := c.Params.ByName("id")
 				c.String(http.StatusOK, fmt.Sprintf("PATCH /api/todos/%s", id))
 			})
-			todosGroup.DELETE("/:id", func(c *gin.Context) {
+			todosGroup.DELETE(":id", func(c *gin.Context) {
 				id := c.Params.ByName("id")
 				c.String(http.StatusNoContent, fmt.Sprintf("DELETE /api/todos/%s", id))
 			})
@@ -1197,8 +1197,8 @@ $ reflex -r '(\.go$|go\.mod)' -s go run ./main.go
 ```sh
 $ curl -X GET 'http://localhost:8080/api/todos' -H 'content-type: application/json'
 $ curl -X GET 'http://localhost:8080/api/todos/1' -H 'content-type: application/json'
-$ curl -X POST 'http://localhost:8080/api/todos' -H 'content-type: application/json' -d '{"title":"test","done":false}
-$ curl -X PATCH 'http://localhost:8080/api/todos/1' -H 'content-type: application/json' -d '{"title":"changed","done":true}
+$ curl -X POST 'http://localhost:8080/api/todos' -H 'content-type: application/json' -d '{"title":"test","done":false}'
+$ curl -X PATCH 'http://localhost:8080/api/todos/1' -H 'content-type: application/json' -d '{"title":"changed","done":true}'
 $ curl -X DELETE 'http://localhost:8080/api/todos/1' -H 'content-type: application/json'
 ```
 
