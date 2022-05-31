@@ -378,22 +378,13 @@ func (u *User) ChangeName(name vo.UserName) {
 `./ddd/02entity/main.go`
 
 ```go
-userId, err := vo.NewUserId(1)
-if err != nil {
-  fmt.Println(err)
-}
-userName, err := vo.NewUserName("新川 盛幸")
-if err != nil {
-  fmt.Println(err)
-}
+userId, _ := vo.NewUserId(1)
+userName, _ := vo.NewUserName("新川 盛幸")
 user := entity.NewUser(*userId, *userName)
 
 // 可変である
 //   ので名前を変更することができる
-newUserName, err := vo.NewUserName("Moriyuki Arakawa")
-if err != nil {
-  fmt.Println(err)
-}
+newUserName, _ := vo.NewUserName("Moriyuki Arakawa")
 log := fmt.Sprintf("旧User id:%d name:%s", user.Id, user.Name)
 fmt.Println(log) // 旧User id:{1} name:{新川 盛幸}
 user.ChangeName(*newUserName)
@@ -402,14 +393,8 @@ fmt.Println(log) // 新User id:{1} name:{Moriyuki Arakawa}
 
 // 同じ属性であっても区別される
 //   のでIDが同じではない限り区別される
-userId2, err := vo.NewUserId(2)
-if err != nil {
-  fmt.Println(err)
-}
-userName2, err := vo.NewUserName("Moriyuki Arakawa")
-if err != nil {
-  fmt.Println(err)
-}
+userId2, _ := vo.NewUserId(2)
+userName2, _ := vo.NewUserName("Moriyuki Arakawa")
 user2 := entity.NewUser(*userId2, *userName2)
 log = fmt.Sprintf("Equals: %t", user.Equals(user2))
 fmt.Println(log) // Equals: false
