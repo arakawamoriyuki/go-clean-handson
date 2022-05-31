@@ -183,7 +183,7 @@ fullName1 = vo.NewFullName("Moriyuki", "Arakawa")
 fullName2 := vo.NewFullName("盛幸", "新川")
 fullName1.Equals(fullName2)
 log := fmt.Sprintf("Equals: %t", fullName1.Equals(fullName2))
-fmt.Println(log)
+fmt.Println(log) // Equals: false
 ```
 
 値オブジェクトは不変なので、`ChangeFirstName` や `ChangeLastName` のような内部の値を破壊的に変更するようなメソッドを持ってはいけません。
@@ -254,13 +254,13 @@ func (m Money) ToString() string {
 jpMoney1 := vo.NewMoney(100, "JPY")
 jpMoney2 := vo.NewMoney(200, "JPY")
 totalMoney, _ := jpMoney1.Add(jpMoney2)
-fmt.Println(fmt.Sprintf("Total: %s", totalMoney.ToString()))
+fmt.Println(fmt.Sprintf("Total: %s", totalMoney.ToString())) // Total: 300(JPY)
 
 // 日本円とドルは加算できないというドメイン知識を表現する
 usMoney := vo.NewMoney(300, "USD")
 _, err := jpMoney1.Add(usMoney)
 if err != nil {
-  fmt.Println(err)
+  fmt.Println(err) // 通貨単位が異なります
 }
 ```
 
@@ -395,10 +395,10 @@ if err != nil {
   fmt.Println(err)
 }
 log := fmt.Sprintf("旧User id:%d name:%s", user.Id, user.Name)
-fmt.Println(log)
+fmt.Println(log) // 旧User id:{1} name:{新川 盛幸}
 user.ChangeName(*newUserName)
 log = fmt.Sprintf("新User id:%d name:%s", user.Id, user.Name)
-fmt.Println(log)
+fmt.Println(log) // 新User id:{1} name:{Moriyuki Arakawa}
 
 // 同じ属性であっても区別される
 //   のでIDが同じではない限り区別される
@@ -412,13 +412,13 @@ if err != nil {
 }
 user2 := entity.NewUser(*userId2, *userName2)
 log = fmt.Sprintf("Equals: %t", user.Equals(user2))
-fmt.Println(log)
+fmt.Println(log) // Equals: false
 
 // 同一性により区別される
 //   のでIDが同じなら同一とされる
 user3 := entity.NewUser(*userId, *userName2)
 log = fmt.Sprintf("Equals: %t", user.Equals(user3))
-fmt.Println(log)
+fmt.Println(log) // Equals: true
 ```
 
 ユーザーは名前や年齢、身長など変更される可能性のあるエンティティです。
