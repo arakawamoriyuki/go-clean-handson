@@ -470,6 +470,8 @@ $ curl --request GET --url http://localhost:8080/api/todos/1
 {"id":1,"name":"test"}
 ```
 
+*クリーンアーキテクチャ本の説明の通り、Presenterで表示可能な形式に変換していますが、テンプレートエンジンの必要ないAPIサーバーな都合上、Viewの概念を取り払い、Controllerに返して値を返すように変更しています。いくつかのリポジトリを参考にしていますが、レンダリングするパターンはPresenter/Controller両方あり、contextを引数でバケツリレーしないといけなかったり、レンダリングを片方にまとめたい理由からControllerに寄せる構成にしています。
+
 また、細部の実装は違うものの、検索するとサンプルプロジェクトを見ることができます。
 
 それぞれ `依存性逆転の原則` を守っているものの定まった構成はなく、各のプロジェクトで必要なレイヤを必要な構成で組まれているようです。
@@ -477,7 +479,9 @@ $ curl --request GET --url http://localhost:8080/api/todos/1
 - https://github.com/bxcodec/go-clean-arch
 - https://github.com/nrslib/CleanArchitecture/tree/master/CleanArchitectureSample
 - https://github.com/evrone/go-clean-template
-
+- https://zenn.dev/daiki_skm/articles/6ff48a9dc4f645
+  - https://github.com/daiki-skm/clean-architecture-api
+- http://psychedelicnekopunch.com/archives/1308
 
 ## クリーンアーキテクチャのメリット/デメリット
 
