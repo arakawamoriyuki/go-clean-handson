@@ -210,20 +210,22 @@ ControllerはModelが持っているプロパティやメソッドを知って�
 
 ##### 安定度と柔軟性のバランス配分
 
-クリーンアーキテクチャの話に戻ります。
+`安定度の高い方向に依存` した方が良い理由をもう少し深ぼってみます。
 
 [世界一わかりやすいClean Architecture](https://www.nuits.jp/entry/easiest-clean-architecture-2019-09)の安定度と柔軟性のバランス配分の話にもある通り、
 
-`外側ほど柔軟性を高く(安定度は低い)` 作る必要があり、
 
-`内側ほど安定度が高く(柔軟性は低い)` 作る必要があることがわかります。
+`外側ほど柔軟性を高く(安定度は低い)` 作り、柔軟に変更できるようにする必要があり、
 
+`内側ほど安定度が高く(柔軟性は低い)` 作り、外側の変更に影響を受けないようにする必要がある、と書かれています。
+
+しかし、普通に作るとUsecase層がInfrastructure層に依存して、Infrastructure層が安定度が高くなってしまいます。
+
+Infrastructure層がUsecase層に依存する方向にしたい、それを実現するために依存方向をコントロールするのが、依存性逆転の原則で、クリーンアーキテクチャの中核になる原則です。
 
 ##### 柔軟性について
 
-柔軟性を高くするにはDIを使って依存をコントロールしたり、アーキテクチャによって入れ替え可能にするなど色々な方法があります。
-
-柔軟性が悪くなる例を説明してみます。
+柔軟に変更できることの大切さについて柔軟性が悪くなる例を元に説明してみます。
 
 ###### ユーザー登録と更新フォームの例
 
@@ -336,7 +338,7 @@ def validate_quantity(value):
 > 内側に近づくと、ソフトウェアは抽象化され、上位レベルの方針をカプセル化するようになる。円の最も内側は、最も一般的で、最上位レベルのものになる。
 
 というのは、内側は `エンティティ` や `ユースケース` DDDでいう `ドメイン` を指し、
-安定度の高いドメインは依存される側として作るべき、ということです。
+安定度の高いドメインはロジックを分散させず依存される側として作るべき、ということです。
 
 ## クリーンアーキテクチャの図解
 
@@ -470,11 +472,25 @@ $ curl --request GET --url http://localhost:8080/api/todos/1
 {"id":1,"name":"test"}
 ```
 
+- [/main.go](https://github.com/arakawamoriyuki/go-clean-handson/blob/main/clean-architecture/main.go#L9)でginのルーターのセットアップとサーバー起動を行います
+- [/infrastructure/router/router.go](https://github.com/arakawamoriyuki/go-clean-handson/blob/main/clean-architecture/infrastructure/router/router.go#L25)でginのルーターとハンドラ(Controller)の紐付けを行います
+- [Controller](https://github.com/arakawamoriyuki/go-clean-handson/blob/main/clean-architecture/interface/controller/todo.go)は以下手順でJSONを出力します。
+  - リクエスト情報を解析
+  - [`InputPort<I>`](https://github.com/arakawamoriyuki/go-clean-handson/blob/main/clean-architecture/domain/application/usecase/todo_input_port.go#L9-L11) の望む [`InputData<DS>`](https://github.com/arakawamoriyuki/go-clean-handson/blob/main/clean-architecture/domain/application/usecase/todo_input_port.go#L4-L6) 形式に変換
+  - [`InputPort<I>`](https://github.com/arakawamoriyuki/go-clean-handson/blob/main/clean-architecture/domain/application/usecase/todo_input_port.go#L9-L11) の実装である [Interactor](https://github.com/arakawamoriyuki/go-clean-handson/blob/main/clean-architecture/domain/application/usecase/todo_interactor.go) のメソッドを呼び出し、以下手順で出力形式のデータを返す
+    - [`Repository<I>`](https://github.com/arakawamoriyuki/go-clean-handson/blob/main/clean-architecture/domain/application/repository/todo.go) を実装した [Repository](https://github.com/arakawamoriyuki/go-clean-handson/blob/main/clean-architecture/interface/repository/todo.go) のメソッドを利用して値を取得します。
+    - さらに [`OutputPort<I>`](https://github.com/arakawamoriyuki/go-clean-handson/blob/main/clean-architecture/domain/application/usecase/todo_output_port.go#L15-L17) の望む [`OutputData<DS>`](https://github.com/arakawamoriyuki/go-clean-handson/blob/main/clean-architecture/domain/application/usecase/todo_output_port.go#L4-L7) 形式に変換し [`OutputPort<I>`](https://github.com/arakawamoriyuki/go-clean-handson/blob/main/clean-architecture/domain/application/usecase/todo_output_port.go#L15-L17) の実装である [Presenter](https://github.com/arakawamoriyuki/go-clean-handson/blob/main/clean-architecture/interface/presenter/todo.go) へ渡し、出力形式に変換して返します。
+  - Interactorが返した値をJSONを出力
+
 *クリーンアーキテクチャ本の説明の通り、Presenterで表示可能な形式に変換していますが、テンプレートエンジンの必要ないAPIサーバーな都合上、Viewの概念を取り払い、Controllerに返して値を返すように変更しています。いくつかのリポジトリを参考にしていますが、レンダリングするパターンはPresenter/Controller両方あり、contextを引数でバケツリレーしないといけなかったり、レンダリングを片方にまとめたい理由からControllerに寄せる構成にしています。
+
+今回はただのTODOアプリで過剰すぎる例ですが、アプリケーションが複雑な要件を持つにつれ効果を発揮していきます。
 
 また、細部の実装は違うものの、検索するとサンプルプロジェクトを見ることができます。
 
 それぞれ `依存性逆転の原則` を守っているものの定まった構成はなく、各のプロジェクトで必要なレイヤを必要な構成で組まれているようです。
+
+参考にするといいと思います。
 
 - https://github.com/bxcodec/go-clean-arch
 - https://github.com/nrslib/CleanArchitecture/tree/master/CleanArchitectureSample
@@ -516,14 +532,23 @@ $ curl --request GET --url http://localhost:8080/api/todos/1
 
 クリーンアーキテクチャを導入することによって何を達成したいのか、実装例とメリットデメリットを学びました。
 
-勉強会などでアーキテクチャについての話が出た時に少しでも理解できるようになっていると腹落ちしやすくなると思います。
+実際に実装してみると、外側の変更は影響を考慮しなくてよく、内側の変更もコンパイルエラーとなって直すべき箇所がすぐわかるようになるなど色々なメリットがあったりします。
 
-入門ということでクリーンアーキテクチャほんの一部の紹介でしたが、必要なシーンが来た時に以下と相談して検討する選択肢として思い出してもらえればと思います。
+個人的には経験豊富な比較的規模の大きいプロジェクトに向いていると思いますが、逆にちゃんと理解したリーダーと、メンバーへの共有、スキャフォールドのようなジェネレータ、テンプレがしっかりしていれば、書くべきコードの場所がはっきりするシンプル(単純)なので初心者向きとの意見もあるようです。
+
+また、4層でなくてもいいというルール上、クリーンアーキテクチャの例の構成に必ずしも従う必要はなく、依存性逆転の原則を守りつつプロジェクトにあった最低限の構成(ドメインとそれ以外など)で関心の分離と冗長さのバランスを持って構成を考えてもいいと思います。
+
+
+アーキテクチャについての話が出た時に少しでも理解できる助けになっていれば嬉しいです。
+
+必要なシーンが来た時に以下と相談して検討する選択肢として思い出してもらえればと思います。
 
 - チームの規模
 - メンバーのスキル
 - ソリューションの複雑さ
 - 時間や予算
+
+入門ということでクリーンアーキテクチャほんの一部の紹介でしたが、紹介できていない原則やプラクティスがかなり多く、クリーンアーキテクチャを導入する/しないに関わらず参考になる話が多いので興味があれば読んでみてください。
 
 ## 参考
 
