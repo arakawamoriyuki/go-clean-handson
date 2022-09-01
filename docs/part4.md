@@ -330,6 +330,8 @@ def validate_quantity(value):
   - 同じようなロジック、似ているロジックであっても、概念が違えばDRYにすべきではないのです。
 - [DRYと不当な抽象化によるコストについて](https://postd.cc/on-dry-and-the-cost-of-wrongful-abstractions/)
   - 実際のところ、私は時として抽象化よりむしろ重複の方を勧めているのです。
+- [DHHはどのようにRailsのコントローラを書くのか](https://postd.cc/how-dhh-organizes-his-rails-controllers/)
+  - 重複する方が、間違った方法で抽象化するよりずっと負担が小さくなります
 
 *全ての原則が常に正しいということではなく、プロジェクトによって目的やその他コンテキストが変わるのでバランスを考えて使いましょう。
 
